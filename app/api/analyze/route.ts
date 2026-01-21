@@ -1,9 +1,7 @@
 import { NextResponse } from 'next/server';
 import OpenAI from 'openai';
 
-const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-});
+// ❌ 여기 있던 const openai = ... 를 지우고, 함수 안으로 넣습니다.
 
 export async function POST(req: Request) {
     try {
@@ -12,6 +10,11 @@ export async function POST(req: Request) {
         if (!image) {
             return NextResponse.json({ error: 'No image provided' }, { status: 400 });
         }
+
+        // ✅ [수정된 부분] API 요청이 들어왔을 때만 OpenAI를 초기화합니다.
+        const openai = new OpenAI({
+            apiKey: process.env.OPENAI_API_KEY,
+        });
 
         const response = await openai.chat.completions.create({
             model: "gpt-4o-mini",
